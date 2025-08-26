@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pretam.ai - AI-Native App Building</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            background-color: #F5F5F5;
+            overflow-x: hidden;
+        }
+
+        /* Custom Colors for Tailwind */
+        :root {
+            --color-primary: #1E90FF;
+            --color-secondary: #FF4500;
+        }
+
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-secondary { color: var(--color-secondary); }
+        .bg-secondary { background-color: var(--color-secondary); }
+        .hover\:bg-primary-dark:hover { background-color: #1a7ae0; }
+        .hover\:bg-secondary-dark:hover { background-color: #e63e00; }
+
+        /* Smooth scroll effect for page navigation */
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+
+        /* Animation for section transitions */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom styling for collapsible FAQ/Docs sections */
+        .collapsible-header {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .collapsible-header:hover {
+            background-color: #f0f0f0;
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .collapsible-content.active {
+            max-height: 500px; /* A value large enough to fit content */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" onclick="showPage('homepage'); return false;" class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1v-3.25l-2.433 1.217a1 1 0 01-1.134 0L9.75 17z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15V5m0 0a2 2 0 012 2v6m-2-6a2 2 0 00-2 2v6" />
+                </svg>
+                <span class="text-2xl font-bold text-gray-800">Pretam.ai</span>
+            </a>
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#" onclick="showPage('homepage'); return false;" class="text-gray-600 hover:text-primary transition">Home</a>
+                <a href="#" onclick="showPage('pricing-page'); return false;" class="text-gray-600 hover:text-primary transition">Pricing</a>
+                <a href="#" onclick="showPage('about-page'); return false;" class="text-gray-600 hover:text-primary transition">About</a>
+                <a href="#" onclick="showPage('blog-page'); return false;" class="text-gray-600 hover:text-primary transition">Blog</a>
+                <a href="#" onclick="showPage('community-page'); return false;" class="text-gray-600 hover:text-primary transition">Community</a>
+                <a href="#" onclick="showPage('docs-page'); return false;" class="text-gray-600 hover:text-primary transition">Docs</a>
+                <a href="#" onclick="showPage('login-page'); return false;" class="text-primary hover:text-primary-dark font-semibold transition">Login</a>
+                <a href="#" onclick="showPage('signup-page'); return false;" class="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition shadow-md">Get Started</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
+            <a href="#" onclick="showPage('homepage'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">Home</a>
+            <a href="#" onclick="showPage('pricing-page'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">Pricing</a>
+            <a href="#" onclick="showPage('about-page'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">About</a>
+            <a href="#" onclick="showPage('blog-page'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">Blog</a>
+            <a href="#" onclick="showPage('community-page'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">Community</a>
+            <a href="#" onclick="showPage('docs-page'); return false;" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition">Docs</a>
+            <a href="#" onclick="showPage('login-page'); return false;" class="block px-4 py-2 text-primary hover:bg-gray-100 transition">Login</a>
+            <a href="#" onclick="showPage('signup-page'); return false;" class="block px-4 py-2 bg-secondary text-white m-2 rounded-lg text-center hover:bg-secondary-dark transition">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Sections (Pages) -->
+    <main class="min-h-screen">
+
+        <!-- 2.1 Homepage -->
+        <section id="homepage" class="page-section active fade-in container mx-auto px-4 py-16 md:py-24">
+            <!-- Hero Section -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                    Build AI-Native Apps in Minutes with <span class="text-primary">Pretam.ai</span>
+                </h1>
+                <p class="mt-4 md:mt-6 text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+                    Turn your ideas into powerful workflows with natural language. No coding required.
+                    <br class="hidden md:inline"> Say it, build it — Pretam’s on it.
+                </p>
+                <div class="mt-8 flex justify-center space-x-4">
+                    <a href="#" onclick="showPage('signup-page'); return false;" class="px-6 py-3 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition shadow-md">Start Building for Free</a>
+                    <a href="https://www.youtube.com/embed/dQw4w9WgXcQ" target="_blank" class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition shadow-md">See Pretam in Action</a>
+                </div>
+                <div class="mt-12 overflow-hidden rounded-xl shadow-2xl">
+                    <img src="https://placehold.co/1200x600/1E90FF/ffffff?text=Pretam.ai+Dashboard+Screenshot" alt="Pretam.ai dashboard showing AI agents in action" class="w-full h-auto">
+                </div>
+            </div>
+
+            <!-- Value Proposition -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Fast Development</h3>
+                    <p class="text-gray-600">Describe your app in plain language, and Pretam builds it in seconds.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Seamless Automation</h3>
+                    <p class="text-gray-600">Meta Agents handle tasks, approvals, and integrations across your stack.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 10.5c0 3.321-4.5 6-7.5 6s-7.5-2.679-7.5-6a7.5 7.5 0 0115 0z" />
+                    </svg>
+                    <h3 class="text-xl font-bold mb-2">Full Ownership</h3>
+                    <p class="text-gray-600">Keep control of your logic and data, no SaaS lock-in.</p>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="mt-24 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">How It Works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+                    <div class="flex flex-col items-center">
+                        <span class="text-4xl font-bold text-primary mb-4">1</span>
+                        <h4 class="text-xl font-semibold mb-2">Describe Your Vision</h4>
+                        <p class="text-gray-600">Describe your app or workflow in natural language, just like you would to a colleague.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-4xl font-bold text-primary mb-4">2</span>
+                        <h4 class="text-xl font-semibold mb-2">Pretam Builds It</h4>
+                        <p class="text-gray-600">Pretam’s AI agents instantly generate the UI, logic, and integrations for you.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-4xl font-bold text-primary mb-4">3</span>
+                        <h4 class="text-xl font-semibold mb-2">Launch and Scale</h4>
+                        <p class="text-gray-600">Deploy, customize, and scale your application within your existing stack with full ownership.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials Section -->
+            <div class="mt-24 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">What Our Users Say</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic text-gray-600">“Pretam turned my idea into a working app in under an hour! It's an incredible time-saver.”</p>
+                        <p class="mt-4 font-semibold text-gray-800">— Jane, Startup Founder</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic text-gray-600">“The workflow automation is seamless. Our team's approval process is now fully automated and transparent.”</p>
+                        <p class="mt-4 font-semibold text-gray-800">— Mark, Operations Lead</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic text-gray-600">“As a developer, I love that Pretam handles the boilerplate and gives me the source code. It’s a game-changer.”</p>
+                        <p class="mt-4 font-semibold text-gray-800">— David, Software Engineer</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing Teaser -->
+            <div class="mt-24 text-center bg-white p-12 rounded-lg shadow-lg">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Start Building for Free. Seriously.</h2>
+                <p class="mt-4 text-gray-600 text-lg">No credit card required. Get 30 free credits every month on our Hobby plan.</p>
+                <a href="#" onclick="showPage('pricing-page'); return false;" class="mt-8 inline-block px-8 py-4 bg-secondary text-white font-semibold text-lg rounded-lg hover:bg-secondary-dark transition shadow-md">See Pricing Plans</a>
+            </div>
+        </section>
+
+        <!-- 2.2 Pricing Page -->
+        <section id="pricing-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Choose the Perfect Plan for Your Team</h1>
+                <p class="mt-4 text-lg text-gray-600">Start with our free plan and upgrade as your needs grow.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+                <!-- Hobby Plan Card -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-transparent">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold mb-2">Hobby</h2>
+                        <p class="text-5xl font-extrabold text-primary">$0<span class="text-lg text-gray-500 font-normal">/month</span></p>
+                    </div>
+                    <ul class="mt-8 space-y-4 text-gray-600">
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>30 credits/month</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Full-stack app building</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>API/MCP integrations</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>App-native Copilot (beta)</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>No credit card required</span>
+                        </li>
+                    </ul>
+                    <a href="#" onclick="showPage('signup-page'); return false;" class="mt-8 block w-full text-center py-3 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition shadow-md">Start for Free</a>
+                </div>
+                <!-- Pro Plan Card -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-2 border-primary relative">
+                    <span class="absolute top-0 right-0 mt-4 mr-4 bg-primary text-white text-xs font-bold py-1 px-3 rounded-full">Most Popular</span>
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold mb-2">Pro</h2>
+                        <p class="text-5xl font-extrabold text-primary">$25<span class="text-lg text-gray-500 font-normal">/month</span></p>
+                        <p class="text-sm text-gray-500 mt-1">(50% off first 3 months)</p>
+                    </div>
+                    <ul class="mt-8 space-y-4 text-gray-600">
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Everything in Hobby, plus...</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>100 credits/month</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Advanced code agent</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Customized integrations</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>Source code & database visibility</span>
+                        </li>
+                    </ul>
+                    <a href="#" onclick="showPage('signup-page'); return false;" class="mt-8 block w-full text-center py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition shadow-md">Power Up Pro</a>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="mt-24 max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+                <div id="faq-container">
+                    <!-- FAQ 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-4">
+                        <div class="collapsible-header flex justify-between items-center font-semibold text-lg">
+                            <span>What are credits?</span>
+                            <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content mt-2 text-gray-600">
+                            <p>Credits are the currency of Pretam.ai, used to power resource-intensive tasks such as generating app code, making API calls, and running complex AI agent workflows. One credit generally equates to a small, specific action, allowing us to manage usage fairly across all plans.</p>
+                        </div>
+                    </div>
+                    <!-- FAQ 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-4">
+                        <div class="collapsible-header flex justify-between items-center font-semibold text-lg">
+                            <span>Can I switch plans?</span>
+                            <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content mt-2 text-gray-600">
+                            <p>Yes, you can easily switch between our Hobby and Pro plans at any time directly from your account dashboard. Your new plan and billing cycle will start immediately.</p>
+                        </div>
+                    </div>
+                    <!-- FAQ 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-4">
+                        <div class="collapsible-header flex justify-between items-center font-semibold text-lg">
+                            <span>Is coding required?</span>
+                            <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content mt-2 text-gray-600">
+                            <p>No, Pretam is designed as a no-code platform. You can build powerful, functional applications and workflows using natural language descriptions alone. While the Pro plan offers advanced code agents for developers, coding is never required to get started.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 2.3 About Page -->
+        <section id="about-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">About Pretam.ai</h1>
+                <p class="mt-4 text-lg text-gray-600">Our mission is to empower you to build what you imagine.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto text-center space-y-8">
+                <p class="text-xl leading-relaxed text-gray-700">
+                    <span class="font-bold text-primary">Pretam.ai</span> empowers small teams to build AI-native apps and workflows, automating tasks and keeping you in control of your data. Incorporated in Hong Kong, our focus is on building innovative, AI-powered automation solutions that give you the speed and ownership you need to succeed.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold text-primary mb-2">Innovation</h3>
+                        <p class="text-gray-600">We push the boundaries of AI to simplify development and create powerful, adaptable tools.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold text-primary mb-2">Ownership</h3>
+                        <p class="text-gray-600">We believe you should own your logic and data, freeing you from vendor lock-in and brittle solutions.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold text-primary mb-2">Simplicity</h3>
+                        <p class="text-gray-600">Our platform is designed to be accessible to everyone, regardless of their coding experience.</p>
+                    </div>
+                </div>
+
+                <div class="mt-16 text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8">Our Team</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="flex flex-col items-center">
+                            <img src="https://placehold.co/150x150/FF4500/FFFFFF?text=Ava" alt="Ava, CEO" class="rounded-full w-28 h-28 object-cover mb-4 shadow-lg">
+                            <h4 class="font-bold text-lg">Ava Chen</h4>
+                            <p class="text-gray-500">CEO & Co-Founder</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <img src="https://placehold.co/150x150/1E90FF/FFFFFF?text=Ben" alt="Ben, CTO" class="rounded-full w-28 h-28 object-cover mb-4 shadow-lg">
+                            <h4 class="font-bold text-lg">Ben Carter</h4>
+                            <p class="text-gray-500">CTO & Co-Founder</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <img src="https://placehold.co/150x150/F5F5F5/333333?text=Chloe" alt="Chloe, AI Lead" class="rounded-full w-28 h-28 object-cover mb-4 shadow-lg">
+                            <h4 class="font-bold text-lg">Chloe Li</h4>
+                            <p class="text-gray-500">AI Research Lead</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16">
+                    <a href="#" onclick="showPage('signup-page'); return false;" class="inline-block px-8 py-4 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition shadow-md">Join Pretam Today</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2.4 Blog Page -->
+        <section id="blog-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">The Pretam.ai Blog</h1>
+                <p class="mt-4 text-lg text-gray-600">Your source for AI, no-code, and workflow automation insights.</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Blog Posts Grid -->
+                <div class="lg:w-3/4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Post 1 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://placehold.co/600x400/1E90FF/FFFFFF?text=AI+Agents" alt="Illustration of AI agents" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold mb-2">Why Environments Are Key to Scalable AI Agents</h3>
+                                <p class="text-gray-600 text-sm mb-4">Building AI agents is exciting, but without a robust environment layer, they’re fragile and hard to scale. At Pretam, we prioritize environments to ensure your agents are testable...</p>
+                                <a href="#" class="text-primary hover:underline">Read More →</a>
+                            </div>
+                        </div>
+                        <!-- Post 2 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://placehold.co/600x400/FF4500/FFFFFF?text=No-Code+Dashboard" alt="Screenshot of a no-code CRM dashboard" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold mb-2">How Pretam Built a CRM Dashboard in 5 Minutes</h3>
+                                <p class="text-gray-600 text-sm mb-4">See a step-by-step tutorial on how we used Pretam’s AI to create a fully functional CRM dashboard with data visualization in minutes...</p>
+                                <a href="#" class="text-primary hover:underline">Read More →</a>
+                            </div>
+                        </div>
+                        <!-- Post 3 -->
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+                            <img src="https://placehold.co/600x400/F5F5F5/333333?text=Workflow+Automation" alt="Diagram of an automated workflow" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold mb-2">No-Code Automation: Getting Started with Pretam</h3>
+                                <p class="text-gray-600 text-sm mb-4">New to workflow automation? This guide will walk you through creating your first Meta Agent and connecting it to your favorite tools...</p>
+                                <a href="#" class="text-primary hover:underline">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="lg:w-1/4">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">Search Blog</h3>
+                        <input type="text" placeholder="Search posts..." class="w-full p-2 border rounded-lg mb-6 focus:outline-none focus:ring focus:ring-primary focus:border-primary">
+                        
+                        <h3 class="text-xl font-bold mb-4">Categories</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li><a href="#" class="hover:underline">AI Development</a></li>
+                            <li><a href="#" class="hover:underline">No-Code</a></li>
+                            <li><a href="#" class="hover:underline">Workflow Automation</a></li>
+                            <li><a href="#" class="hover:underline">Tutorials</a></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg mt-8 text-center">
+                        <h3 class="text-xl font-bold mb-4">Stay Up-to-Date</h3>
+                        <p class="text-gray-600 mb-4">Get the latest posts and news delivered to your inbox.</p>
+                        <button class="w-full px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2.5 Community Page -->
+        <section id="community-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Join the Pretam Community</h1>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Connect with other builders, share your workflows, and get support from our team and fellow enthusiasts.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <h3 class="text-2xl font-bold mb-2">Discussion Forums</h3>
+                    <p class="text-gray-600">Share tips, ask questions, and showcase your amazing AI-native apps with our community.</p>
+                    <a href="#" class="mt-6 inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition shadow-md">Join Now</a>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <h3 class="text-2xl font-bold mb-2">GitHub Contributions</h3>
+                    <p class="text-gray-600">Explore and contribute to our open-source repositories and tools on GitHub.</p>
+                    <a href="https://github.com/CreaoAI" target="_blank" class="mt-6 inline-block px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg hover:bg-gray-700 transition shadow-md">View Our Repos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2.6 Documentation/Getting Started -->
+        <section id="docs-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Documentation & Guides</h1>
+                <p class="mt-4 text-lg text-gray-600">Everything you need to get started and master Pretam.ai.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Quick Start -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="collapsible-header flex justify-between items-center font-bold text-xl">
+                        <span>Quick Start: Build a Simple Weather Agent</span>
+                        <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="collapsible-content mt-4 text-gray-600">
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Create a new project in your Pretam.ai dashboard.</li>
+                            <li>Describe your agent's purpose in the prompt: "I need an agent that fetches the current weather for a specified city and emails it to me."</li>
+                            <li>Pretam's Meta Agents will automatically scaffold the necessary tools (weather API, email integration).</li>
+                            <li>Follow the on-screen prompts to connect your email account.</li>
+                            <li>Test your agent and deploy it. You've just built your first AI-native workflow!</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Tutorials -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="collapsible-header flex justify-between items-center font-bold text-xl">
+                        <span>Tutorials</span>
+                        <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="collapsible-content mt-4 space-y-4">
+                        <h4 class="font-semibold text-lg">Build Your First Workflow with Pretam</h4>
+                        <p class="text-gray-600">A detailed walkthrough on creating a multi-step workflow, from a simple trigger to a complex series of actions.</p>
+                        <h4 class="font-semibold text-lg">Combining Mock and Real Tools for Testing</h4>
+                        <p class="text-gray-600">Learn how to use Pretam’s API mocking features to test your agent’s logic without making live calls, then seamlessly switch to real-world integrations.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ/Troubleshooting -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="collapsible-header flex justify-between items-center font-bold text-xl">
+                        <span>FAQ & Troubleshooting</span>
+                        <svg class="h-5 w-5 transition-transform transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="collapsible-content mt-4 space-y-4">
+                        <p class="text-gray-600">
+                            **Q: My API integration failed to authenticate. What should I do?**<br>
+                            A: Double-check your API key and permissions. Pretam’s auto-authentication works best with standard OAuth2 or key-based methods. Refer to the provider’s documentation for the correct scope.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <a href="#" onclick="showPage('signup-page'); return false;" class="inline-block px-8 py-4 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition shadow-md">Start Building Now</a>
+            </div>
+        </section>
+
+        <!-- 2.7 Login/Sign-Up Page -->
+        <section id="login-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24 max-w-md">
+            <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+                <img src="https://placehold.co/100x100/1E90FF/FFFFFF?text=Pretam" alt="Pretam.ai Logo" class="mx-auto h-16 w-16 mb-4">
+                <h1 class="text-3xl font-bold mb-2">Log In</h1>
+                <p class="text-gray-600 mb-6">Welcome back to your dashboard.</p>
+                <form id="login-form">
+                    <input type="email" placeholder="Email Address" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input type="password" placeholder="Password" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    <button type="submit" class="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition shadow-md">Log In</button>
+                    <p class="mt-4 text-center text-gray-600">
+                        Don't have an account? <a href="#" onclick="showPage('signup-page'); return false;" class="text-primary hover:underline">Sign Up</a>
+                    </p>
+                    <div class="my-6 flex items-center">
+                        <hr class="flex-grow border-t border-gray-300">
+                        <span class="mx-2 text-gray-500">or</span>
+                        <hr class="flex-grow border-t border-gray-300">
+                    </div>
+                    <button type="button" class="w-full py-3 border border-gray-300 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-50 transition">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.0001 4.75001C14.0044 4.75001 15.6989 5.43851 16.901 6.51651L19.2618 4.15576C17.433 2.56951 15.0818 1.75001 12.0001 1.75001C7.81708 1.75001 4.29658 4.14876 2.66808 7.74901L5.59483 9.94051C6.38883 8.16901 8.01633 6.91651 10.0461 6.64351C9.69633 7.57951 9.5 8.60101 9.5 9.75001C9.5 10.899 9.69633 11.9205 10.0461 12.8565C8.01633 12.5835 6.38883 11.331 5.59483 9.56026L2.66808 11.7503C4.29658 15.3506 7.81708 17.75 12.0001 17.75C16.1831 17.75 19.7036 15.3506 21.3321 11.7503L18.4053 9.56026C17.6113 11.331 15.9838 12.5835 13.9541 12.8565C14.3038 11.9205 14.5 10.899 14.5 9.75001C14.5 8.60101 14.3038 7.57951 13.9541 6.64351C15.9838 6.91651 17.6113 8.16901 18.4053 9.94051L21.3321 11.7503C20.6186 13.3323 19.5786 14.6738 18.2911 15.7728L21.2178 17.9643C22.6578 16.7118 23.6353 15.1113 24.1253 13.2503H21.3321L24.1253 13.2503C23.6353 11.3906 22.6578 9.79014 21.2178 8.53764L18.2911 6.34614L21.3321 4.15576L18.9713 1.79495L18.9713 1.79495C17.433 0.208701 15.0818 -0.500012 12.0001 -0.500012C6.91633 -0.500012 2.66808 2.37874 0.536082 6.57724L3.46283 8.76874C4.69708 6.00799 8.01633 4.75001 12.0001 4.75001Z" fill="#1E90FF"/></svg>
+                        <span>Sign In with Google</span>
+                    </button>
+                    <p id="login-message" class="mt-4 text-sm text-red-500 hidden"></p>
+                </form>
+            </div>
+        </section>
+        
+        <section id="signup-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24 max-w-md">
+            <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+                <img src="https://placehold.co/100x100/1E90FF/FFFFFF?text=Pretam" alt="Pretam.ai Logo" class="mx-auto h-16 w-16 mb-4">
+                <h1 class="text-3xl font-bold mb-2">Get Started</h1>
+                <p class="text-gray-600 mb-6">Create your account to start building. No credit card required.</p>
+                <form id="signup-form">
+                    <input type="email" placeholder="Email Address" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
+                    <input type="password" placeholder="Password" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary">
+                    <button type="submit" class="w-full py-3 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition shadow-md">Sign Up for Free</button>
+                    <p class="mt-4 text-center text-gray-600">
+                        Already have an account? <a href="#" onclick="showPage('login-page'); return false;" class="text-secondary hover:underline">Log In</a>
+                    </p>
+                    <div class="my-6 flex items-center">
+                        <hr class="flex-grow border-t border-gray-300">
+                        <span class="mx-2 text-gray-500">or</span>
+                        <hr class="flex-grow border-t border-gray-300">
+                    </div>
+                    <button type="button" class="w-full py-3 border border-gray-300 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-50 transition">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.0001 4.75001C14.0044 4.75001 15.6989 5.43851 16.901 6.51651L19.2618 4.15576C17.433 2.56951 15.0818 1.75001 12.0001 1.75001C7.81708 1.75001 4.29658 4.14876 2.66808 7.74901L5.59483 9.94051C6.38883 8.16901 8.01633 6.91651 10.0461 6.64351C9.69633 7.57951 9.5 8.60101 9.5 9.75001C9.5 10.899 9.69633 11.9205 10.0461 12.8565C8.01633 12.5835 6.38883 11.331 5.59483 9.56026L2.66808 11.7503C4.29658 15.3506 7.81708 17.75 12.0001 17.75C16.1831 17.75 19.7036 15.3506 21.3321 11.7503L18.4053 9.56026C17.6113 11.331 15.9838 12.5835 13.9541 12.8565C14.3038 11.9205 14.5 10.899 14.5 9.75001C14.5 8.60101 14.3038 7.57951 13.9541 6.64351C15.9838 6.91651 17.6113 8.16901 18.4053 9.94051L21.3321 11.7503C20.6186 13.3323 19.5786 14.6738 18.2911 15.7728L21.2178 17.9643C22.6578 16.7118 23.6353 15.1113 24.1253 13.2503H21.3321L24.1253 13.2503C23.6353 11.3906 22.6578 9.79014 21.2178 8.53764L18.2911 6.34614L21.3321 4.15576L18.9713 1.79495L18.9713 1.79495C17.433 0.208701 15.0818 -0.500012 12.0001 -0.500012C6.91633 -0.500012 2.66808 2.37874 0.536082 6.57724L3.46283 8.76874C4.69708 6.00799 8.01633 4.75001 12.0001 4.75001Z" fill="#1E90FF"/></svg>
+                        <span>Sign Up with Google</span>
+                    </button>
+                    <p id="signup-message" class="mt-4 text-sm text-red-500 hidden"></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 2.8 Privacy Policy and Terms & Conditions -->
+        <section id="privacy-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24 max-w-4xl">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h1 class="text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+                <p class="text-gray-700">Effective Date: October 26, 2025</p>
+                <p class="mt-4 text-gray-700 leading-relaxed">
+                    This Privacy Policy describes how Pretam.ai ("we," "us," or "our") collects, uses, and discloses your information when you use our website and services.
+                </p>
+                <h2 class="text-2xl font-bold mt-8 mb-4">1. Information We Collect</h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>**Personal Information:** When you create an account, we collect your email address and a password. If you use Google SSO, we receive your email and profile information from Google.</li>
+                    <li>**Usage Data:** We may collect information about how you access and use the service, such as pages visited, time spent, and interactions with features.</li>
+                </ul>
+                <h2 class="text-2xl font-bold mt-8 mb-4">2. How We Use Your Information</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    We use the information we collect to:
+                </p>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Provide, operate, and maintain our services.</li>
+                    <li>Process your requests and manage your account.</li>
+                    <li>Improve and personalize user experience.</li>
+                    <li>Communicate with you about updates, offers, and support.</li>
+                    <li>Ensure the security and integrity of our platform.</li>
+                </ul>
+                <h2 class="text-2xl font-bold mt-8 mb-4">3. Data Security</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    We are committed to protecting your data. We use industry-standard security measures, including HTTPS and data encryption, to safeguard your personal information.
+                </p>
+                <div class="mt-8 text-center">
+                    <a href="#" onclick="showPage('homepage'); return false;" class="inline-block px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition shadow-md">Back to Home</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="terms-page" class="page-section fade-in container mx-auto px-4 py-16 md:py-24 max-w-4xl">
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h1 class="text-4xl font-bold mb-8 text-center">Terms & Conditions</h1>
+                <p class="text-gray-700">Last Updated: October 26, 2025</p>
+                <p class="mt-4 text-gray-700 leading-relaxed">
+                    Welcome to Pretam.ai. These Terms of Service ("Terms") govern your access to and use of our website and services. By using our services, you agree to be bound by these Terms.
+                </p>
+                <h2 class="text-2xl font-bold mt-8 mb-4">1. Use of Service</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    You may use our services only in compliance with these Terms and all applicable laws. You must be at least 18 years old to use the service.
+                </p>
+                <h2 class="text-2xl font-bold mt-8 mb-4">2. Accounts and Subscription</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    To access certain features, you must create an account. You are responsible for maintaining the confidentiality of your account password. Our Pro plan is a subscription-based service, and your access will be billed on a recurring basis.
+                </p>
+                <h2 class="text-2xl font-bold mt-8 mb-4">3. Content Ownership</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    You retain all rights to the data and content you input into the platform. We do not claim ownership of your data.
+                </p>
+                <div class="mt-8 text-center">
+                    <a href="#" onclick="showPage('homepage'); return false;" class="inline-block px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition shadow-md">Back to Home</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4">Pretam.ai</h3>
+                <p class="text-gray-400">Say it, build it — Pretam’s on it.</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="https://twitter.com/CreaoAI" target="_blank" class="text-gray-400 hover:text-white transition">X</a>
+                    <a href="https://www.linkedin.com/company/creaoai" target="_blank" class="text-gray-400 hover:text-white transition">LinkedIn</a>
+                    <a href="https://github.com/CreaoAI" target="_blank" class="text-gray-400 hover:text-white transition">GitHub</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Product</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="showPage('pricing-page'); return false;" class="hover:underline">Pricing</a></li>
+                    <li><a href="#" onclick="showPage('docs-page'); return false;" class="hover:underline">Documentation</a></li>
+                    <li><a href="#" class="hover:underline">App-Native Copilot</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Company</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="showPage('about-page'); return false;" class="hover:underline">About Us</a></li>
+                    <li><a href="#" onclick="showPage('blog-page'); return false;" class="hover:underline">Blog</a></li>
+                    <li><a href="#" onclick="showPage('community-page'); return false;" class="hover:underline">Community</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="showPage('privacy-page'); return false;" class="hover:underline">Privacy Policy</a></li>
+                    <li><a href="#" onclick="showPage('terms-page'); return false;" class="hover:underline">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for page navigation
+        function showPage(pageId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0); // Scroll to top on page change
+        }
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // JavaScript for collapsible sections (Docs/FAQ)
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const arrow = header.querySelector('svg');
+                content.classList.toggle('active');
+                if (content.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    content.style.maxHeight = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // JavaScript for form submissions (placeholders)
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageBox = document.getElementById('login-message');
+            messageBox.textContent = 'Login functionality is a placeholder. Please try the Sign Up page.';
+            messageBox.classList.remove('hidden');
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageBox = document.getElementById('signup-message');
+            messageBox.textContent = 'Sign Up functionality is a placeholder. Form submitted!';
+            messageBox.classList.remove('hidden');
+            // In a real app, you would handle form submission here
+        });
+    </script>
+</body>
+</html>
